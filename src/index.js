@@ -17,11 +17,19 @@ import { ProfileListPage } from './components/pages/ProfileList';
 import { LoginPage } from './components/pages/Login';
 import { config } from './utils/oktaConfig';
 import { LoadingComponent } from './components/common';
+import { onboard } from './components/pages/onboard';
+import WorkOrderPage from './components/pages/WorkOrderForm/WorkOrderPage';
+import DashBoardPage from './components/pages/DashBoard/DashBoardPage';
+
+import MaintenanceCard from './components/common/MaintenanceCard';
+import { WOProvider } from './state/WOContext';
 
 ReactDOM.render(
   <Router>
     <React.StrictMode>
-      <App />
+      <WOProvider>
+        <App />
+      </WOProvider>
     </React.StrictMode>
   </Router>,
   document.getElementById('root')
@@ -39,23 +47,22 @@ function App() {
   };
 
   return (
-    
     <Security {...config} onAuthRequired={authHandler}>
-    <Switch>
-      <Route path="/login" component={LoginPage} />
-      <Route path="/implicit/callback" component={LoginCallback} />
-      {/* any of the routes you need secured should be registered as SecureRoutes */}
-      <SecureRoute
-        path="/"
-        exact
-        component={() => <HomePage LoadingComponent={LoadingComponent} />}
-      />
-      <SecureRoute path="/example-list" component={ExampleListPage} />
-      
-      <SecureRoute path="/profile-list" component={ProfileListPage} />
-      
-      <Route component={NotFoundPage} />
-    </Switch>
+      <Switch>
+        <Route path="/login" component={LoginPage} />
+        <Route path="/onboarding" component={onboard} />
+        <Route path="/implicit/callback" component={LoginCallback} />
+
+        {/* any of the routes you need secured should be registered as SecureRoutes */}
+        <SecureRoute path="/" component={DashBoardPage} />
+        <SecureRoute path="/example-list" component={ExampleListPage} />
+        <SecureRoute path="/profile-list" component={ProfileListPage} />
+        <SecureRoute path="/work-order" component={WorkOrderPage} />
+
+        <SecureRoute path="/card" component={MaintenanceCard} />
+
+        <Route component={NotFoundPage} />
+      </Switch>
     </Security>
   );
 }
